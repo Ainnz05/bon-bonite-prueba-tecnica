@@ -35,7 +35,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run Serenity tests
-        run: ./gradlew clean test aggregate -Dheadless.mode=true
+        run: ./gradlew clean test aggregate -Dheadless.mode=true -Dserenity.browser.width=1920 -Dserenity.browser.height=1080
 
       - name: Upload Serenity report
         if: always()

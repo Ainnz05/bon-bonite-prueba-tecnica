@@ -6,6 +6,7 @@ import com.qvision.bonbonite.screenplay.utils.Urls;
 import net.serenitybdd.screenplay.Performable;
 import net.serenitybdd.screenplay.Task;
 import net.serenitybdd.screenplay.actions.Click;
+import net.serenitybdd.screenplay.actions.JavaScriptClick;
 import net.serenitybdd.screenplay.actions.Open;
 import net.serenitybdd.screenplay.actions.Scroll;
 import net.serenitybdd.screenplay.waits.WaitUntil;
@@ -53,17 +54,18 @@ public final class AgregarProductoCarrito {
                     actor.attemptsTo(
                             Scroll.to(
                                     ProductPage.BOTON_AGREGAR_CARRITO
-                            )
+                            ).andAlignToBottom()
                     );
 
                     pausa();
 
-                    // Agregar producto
                     actor.attemptsTo(
-                            Click.on(
+                            JavaScriptClick.on(
                                     ProductPage.BOTON_AGREGAR_CARRITO
                             )
                     );
+
+                    pausa();
 
                     pausa();
 

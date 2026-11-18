@@ -2,35 +2,51 @@ package com.qvision.bonbonite.screenplay.interactions;
 
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.Interaction;
-import net.serenitybdd.screenplay.Performable;
 import net.serenitybdd.screenplay.Tasks;
 import net.serenitybdd.screenplay.abilities.BrowseTheWeb;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
-import java.util.List;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class AceptarCookiesSiAparecen implements Interaction {
 
-    @Override
-    public <T extends Actor> void performAs(T actor) {
-        var driver = BrowseTheWeb.as(actor).getDriver();
-        List<By> candidatos = List.of(
-                By.xpath("//button[contains(normalize-space(.),'Aceptar todas')]") ,
-                By.xpath("//button[normalize-space()='Aceptar']"),
-                By.xpath("//button[normalize-space()='Acepto']")
-        );
-
-        for (By locator : candidatos) {
-            List<WebElement> elementos = driver.findElements(locator);
-            if (!elementos.isEmpty() && elementos.get(0).isDisplayed() && elementos.get(0).isEnabled()) {
-                elementos.get(0).click();
-                break;
-            }
-        }
+    public static AceptarCookiesSiAparecen ahora() {
+        return Tasks.instrumented(AceptarCookiesSiAparecen.class);
     }
 
-    public static Performable ahora() {
-        return Tasks.instrumented(AceptarCookiesSiAparecen.class);
+    @Override
+    public <T extends Actor> void performAs(T actor) {
+
+        WebDriver driver = BrowseTheWeb.as(actor).getDriver();
+
+        try {
+
+            WebDriverWait wait =
+                    new WebDriverWait(driver, Duration.ofSeconds(5));
+
+            wait.until(d -> Boolean.TRUE.equals(
+                    ((JavascriptExecutor) d).executeScript(
+                            "return typeof CookieScript !== 'undefined' " +
+                                    "&& CookieScript.instance != null;"
+                    )
+            ));
+
+            ((JavascriptExecutor) driver).executeScript(
+                    "CookieScript.instance.acceptAllAction();"
+            );
+
+            wait.until(d -> Boolean.TRUE.equals(
+                    ((JavascriptExecutor) d).executeScript(
+                            "var e = document.getElementById('cookiescript_injected');" +
+                                    "return !e || e.offsetParent === null;"
+                    )
+            ));
+
+        } catch (Exception ignored) {
+            // Si el banner no aparece, la prueba continúa normalmente.
+        }
     }
 }
