@@ -8,7 +8,7 @@ public final class AccountPage {
     private AccountPage() {
     }
 
-    // Registro: estos selectores se conservan tal como estaban en el flujo funcional.
+    // Registro
     public static final Target BOTON_ABRIR_REGISTRO =
             Target.the("botón Regístrate")
                     .located(By.id("show_register"));

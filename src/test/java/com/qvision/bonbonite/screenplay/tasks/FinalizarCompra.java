@@ -29,15 +29,12 @@ public final class FinalizarCompra {
                 "{0} avanza hasta finalizar la compra",
 
                 actor -> {
-
-                    // Esperar que el botón aparezca
                     actor.attemptsTo(
                             WaitUntil.the(
                                     CartPage.BOTON_FINALIZAR_COMPRA,
                                     isVisible()
                             ).forNoMoreThan(15).seconds()
                     );
-
                     pausa();
 
                     // Colocar el botón abajo de la pantalla
@@ -47,9 +44,7 @@ public final class FinalizarCompra {
                                     CartPage.BOTON_FINALIZAR_COMPRA
                             ).andAlignToBottom()
                     );
-
                     pausa();
-
                     // Clic mediante JavaScript para evitar
                     // ElementClickInterceptedException
                     actor.attemptsTo(
@@ -57,7 +52,6 @@ public final class FinalizarCompra {
                                     CartPage.BOTON_FINALIZAR_COMPRA
                             )
                     );
-
                     pausa();
                 }
         );
