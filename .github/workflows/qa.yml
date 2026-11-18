@@ -1,19 +1,24 @@
-name: QA Automation - Bon-Bonite
+name: QA Automation
 
 on:
   push:
-    branches: [ main, master ]
+    branches:
+      - main
+
   pull_request:
-    branches: [ main, master ]
+    branches:
+      - main
+
   workflow_dispatch:
 
 jobs:
+
   test:
+
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
 
     steps:
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -24,12 +29,13 @@ jobs:
           java-version: '17'
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '9.2.1'
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Dar permisos al Gradle Wrapper
+        run: chmod +x gradlew
 
       - name: Run Serenity tests
-        run: gradle clean test aggregate -Dheadless.mode=true
+        run: ./gradlew clean test aggregate
 
       - name: Upload Serenity report
         if: always()
@@ -37,4 +43,3 @@ jobs:
         with:
           name: serenity-report
           path: target/site/serenity/
-          if-no-files-found: ignore
